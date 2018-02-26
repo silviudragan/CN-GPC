@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "glut.h"
+#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -124,6 +124,55 @@ void Display2_1()
 	glEnd();
 }
 
+void Dispaly2_2_1() {
+   double xmax, ymax, xmin, ymin;
+   double a = 0.3, b = 0.2;
+   double pi = 4 * atan(1);
+   double ratia = 0.01;
+   double t;
+
+    // afisarea punctelor propriu-zise precedata de scalare
+   glColor3f(1,0.1,0.1); // rosu
+   glBegin(GL_LINE_STRIP); 
+   for (t = - pi + ratia; t < pi; t += ratia) {
+      double x, y;
+      x =  2 * (a * cos(t) + b) * cos(t) ;
+      y =  2 * (a * cos(t) + b) * sin(t) ;
+      
+      glVertex2f(x,y);
+   }
+
+   glEnd();
+
+}
+
+void Dispaly2_2_2() {
+   double xmax, ymax, xmin, ymin;
+   double a = 0.2;
+   double pi = 4 * atan(1);
+   double ratia = 0.05;
+   double t;
+
+   	xmax =  a / (4 * pow(cos(-pi/2),2) - 3);
+    ymax =  a * tan(t) / (4 * pow(cos(pi/2),2) - 3);
+
+    // afisarea punctelor propriu-zise precedata de scalare
+   glColor3f(0.2,0.15,0.88); // rosu
+   glBegin(GL_LINE_STRIP); 
+   for (t = pi/2 + ratia; t < pi; t += ratia) {
+      double x, y;
+      if (t != pi/6 && t != -pi/6) {
+      	x =  a / (4 * pow(cos(t),2) - 3);
+      	y =  (a * tan(t)) / (4 * pow(cos(t),2) - 3);
+      
+     	glVertex2f(x,y);
+      }
+   }
+
+   glEnd();
+
+}
+
 void Display2_2_3()
 {
 	double a = 0.1;
@@ -192,6 +241,63 @@ void Display2_2_5()
 	}
 	glEnd();
 }
+
+void Dispaly2_2_6() {
+    double xmax, ymax, xmin, ymin;
+   double a = 0.4;
+   double pi = 4 * atan(1);
+   double ratia = 0.00001;
+   double t ;
+   double r;
+
+   // afisarea punctelor propriu-zise precedata de scalare
+   glColor3f(1,0.1,0.1); // rosu
+   glBegin(GL_LINE_STRIP); 
+   for (t = - pi/4 + ratia; t < pi / 4; t += ratia) {
+      double x1, y1;
+      r = -a * pow(2 * cos(2*t),1.0/2);
+      x1 = r * cos(t);
+      y1 = r * sin(t);
+
+      glVertex2f(x1,y1);
+   }
+
+   for (t = - pi/4 + ratia; t < pi / 4; t += ratia) {
+      double x1, y1;
+      r = +a * pow(2 * cos(2*t),1.0/2);
+      x1 = r * cos(t);
+      y1 = r * sin(t);
+
+      glVertex2f(x1,y1);
+   }
+   glEnd();
+
+}
+
+void Dispaly2_2_7() {
+   double xmax, ymax, xmin, ymin;
+   double a = 0.02;
+   double pi = 4 * atan(1);
+   double ratia = 0.01;
+   double t ;
+   double r;
+
+   // afisarea punctelor propriu-zise precedata de scalare
+   glColor3f(1,0.1,0.1); // rosu
+   glBegin(GL_LINE_STRIP); 
+   for (t = 0 + ratia; t < 100; t += ratia) {
+      double x1, y1;
+      r = a * exp(1 + t);
+      x1 = r * cos(t);
+      y1 = r * sin(t);
+
+      glVertex2f(x1,y1);
+   }
+
+   glEnd();
+
+}
+
 void Init(void) {
 
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -216,6 +322,12 @@ void Display(void) {
 	case '3':
 		Display2_1();
 		break;
+	case '4':
+      Dispaly2_2_1();
+      break;
+    case '5':
+      Dispaly2_2_2();
+      break;
 	case '6':
 		Display2_2_3();
 		break;
@@ -225,6 +337,12 @@ void Display(void) {
 	case '8':
 		Display2_2_5();
 		break;
+	case '9':
+      Dispaly2_2_6();
+      break;
+   case '0':
+      Dispaly2_2_7();
+      break;
 	default:
 		break;
 	}
