@@ -57,10 +57,8 @@ def rezolva_sistem_superior_triunghiular(extinsa):
         it_solution = 0
         x = 0
         for j in range(dimensiune - 1, i, -1):
-            print(i, j, extinsa[i][j])
             x += solution[it_solution] * extinsa[i][j]
             it_solution += 1
-        print(i, extinsa[i][i])
         try:
             solution.append((extinsa[i][dimensiune] - x) / extinsa[i][i])
         except Exception:
@@ -79,8 +77,7 @@ def substitutie_inversa():
 
     l = 0
     index_pivot = pivot(extinsa, l)
-    au = extinsa[index_pivot][l]
-    print()
+    au = extinsa[l][l]
     # interschimbarea celor 2 linii, daca este nevoie
     extinsa[index_pivot], extinsa[l] = extinsa[l], extinsa[index_pivot]
     while l < dimensiune - 1 and fabs(au) > precizie:
@@ -95,29 +92,35 @@ def substitutie_inversa():
         # interschimbarea celor 2 linii, daca este nevoie
         extinsa[index_pivot], extinsa[l] = extinsa[l], extinsa[index_pivot]
         au = 0 - fabs(extinsa[l][l])
+
     if fabs(au) <= precizie:
         print("matrice singulara")
     else:
         solution, raw = rezolva_sistem_superior_triunghiular(extinsa)
-        print("Solutia sistemului este ", solution)
+        print("Solutia sistemului este: ", solution)
 
         ##################################################################
         ##################### Verificare solutie #########################
         ##################################################################
+        from numpy.linalg import inv
+        print(matrix)
+        print("Inversa:\n", inv(np.matrix(matrix)))
+
         verificare_sol = np.dot(matrix, raw) - rezultat
-        print("Verificarea solutiei ", verificare_sol)
+        print("Verificarea solutiei: ", verificare_sol)
         sum = 0
         for i in verificare_sol:
             sum += pow(fabs(i), 2)
         print("|| z ||2 = ", sqrt(sum))
+
         # pprint(extinsa)
 
 
 
         sol_num = np.linalg.solve(matrix, rezultat)
-        # print("linalg ", sol_num)
+        print("Functia linalg", sol_num)
         ver_sol_num = np.dot(matrix, sol_num) - rezultat
-        #print("ver sol num ", ver_sol_num)
+        # print("ver sol num ", ver_sol_num)
         sum = 0
         for i in ver_sol_num:
             sum += pow(fabs(i), 2)
@@ -125,11 +128,19 @@ def substitutie_inversa():
         print("|| A* Xgauss - b ||2 = ", sqrt(sum))
 
 
+
 def main_mandatory():
     citire_date()
     substitutie_inversa()
 
 main_mandatory()
+
+
+
+
+
+
+
 
 global a
 global b
@@ -181,13 +192,13 @@ def zero_sub_dig():
     e = []
     f = []
     for i in range(dimensiune-1):
-        if fabs(c[i]) < fabs(a[i]):
+        if fabs(c[i]) <= fabs(a[i]):
             a[i+1] = a[i+1] - c[i]/a[i]*b[i]
             d.append(a[i])
             e.append(b[i])
             f.append(0)
         else:
-            a[i+1] = -1 * a[i]/c[i] * a[i+1] + b[i]
+            a[i+1] = ((-1) * (a[i]/c[i])) * a[i+1] + b[i]
             try:
                 b[i+1] = 0
             except Exception:
@@ -203,26 +214,65 @@ def zero_sub_dig():
 
 
 def rezolvare_sistem():
-    solution = [rezultat[dimensiune-1]/d[dimensiune - 1]]
-    solution.append((rezultat[dimensiune-2] - e[dimensiune - 2]*solution[0])/d[dimensiune-2])
-
+    solution = [int(0) for i in range(dimensiune)]
+    solution[dimensiune-1] = rezultat[dimensiune-1]/d[dimensiune - 1]
+    solution[dimensiune-2] = (rezultat[dimensiune-2] - e[dimensiune - 2]*solution[dimensiune-1])/d[dimensiune-2]
     pas = 0
     for i in range(dimensiune-3, -1, -1):
         x = dimensiune - pas - 1
         sum = 0
-        sum += f[i]*rezultat[x]
-        sum += e[i]*rezultat[x-1]
-        sum += d[i]*rezultat[x-2]
+        sum += f[i]*solution[x]
+        sum += e[i]*solution[x-1]
+        sol = (rezultat[i] - sum)/d[i]
         pas += 1
-        solution.append(sum)
+        solution[i] = sol
     return solution
 
 
 def main_bonus():
+    print("\nBonus\n")
     citire_bonus()
     zero_sub_dig()
     solutie = rezolvare_sistem()
     print(solutie)
 
 
-main_bonus()
+# main_bonus()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
