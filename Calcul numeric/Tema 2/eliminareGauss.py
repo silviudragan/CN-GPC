@@ -57,10 +57,8 @@ def rezolva_sistem_superior_triunghiular(extinsa):
         it_solution = 0
         x = 0
         for j in range(dimensiune - 1, i, -1):
-            print(i, j, extinsa[i][j])
             x += solution[it_solution] * extinsa[i][j]
             it_solution += 1
-        print(i, extinsa[i][i])
         try:
             solution.append((extinsa[i][dimensiune] - x) / extinsa[i][i])
         except Exception:
@@ -172,6 +170,15 @@ global d
 global e
 global f
 
+def inmultire_linie(x,i):
+    if (c[i-1]):
+        c[i-1] *= x
+    a[i] *= x
+    if len(b) > i:
+        b[i] *= x
+    if len(f) > i:
+        f[i] *= x
+    rezultat[i] *= x
 
 def zero_sub_dig():
     global d
@@ -180,41 +187,51 @@ def zero_sub_dig():
     d = []
     e = []
     f = []
+    for i in range (0,dimensiune-2):
+        f.append(0)
     for i in range(dimensiune-1):
-        if fabs(c[i]) < fabs(a[i]):
-            a[i+1] = a[i+1] - c[i]/a[i]*b[i]
-            d.append(a[i])
-            e.append(b[i])
-            f.append(0)
-        else:
-            a[i+1] = -1 * a[i]/c[i] * a[i+1] + b[i]
-            try:
-                b[i+1] = 0
-            except Exception:
-                pass
-            d.append(c[i])
-            e.append(a[i+1])
-            try:
-                f.append(b[i+1])
-            except Exception:
-                pass
-    d.append(a[dimensiune-1])
-    print(d, e, f)
+        if fabs(c[i]) > fabs(a[i]):
+            aux = a[i]
+            a[i] = c[i]
+            c[i] = aux
+            aux = b[i]
+            b[i] = a[i+1]
+            a[i+1] = aux
+            if len(b) > i + 1:
+                aux = f[i]
+                f[i] = b[i+1]
+                b[i+1] = aux
+            aux = rezultat[i]
+            rezultat[i] = rezultat[i+1]
+            rezultat[i+1] = aux
+        aux = a[i]
+        inmultire_linie(c[i], i)
+        inmultire_linie(aux, i + 1)
+        c[i] = 0
+        a[i + 1] -= b[i]
+        if len(b) > i + 1:
+            b[i + 1] -= f[i]
+        rezultat[i+1] -= rezultat[i]
+
+    d = list(a)
+    e = list(b)
+    print(d,e,f,rezultat)
+
 
 
 def rezolvare_sistem():
-    solution = [rezultat[dimensiune-1]/d[dimensiune - 1]]
-    solution.append((rezultat[dimensiune-2] - e[dimensiune - 2]*solution[0])/d[dimensiune-2])
-
+    solution = [int(0) for i in range(dimensiune)]
+    solution[dimensiune-1] = rezultat[dimensiune-1]/d[dimensiune - 1]
+    solution[dimensiune-2] = (rezultat[dimensiune-2] - e[dimensiune - 2]*solution[dimensiune-1])/d[dimensiune-2]
     pas = 0
     for i in range(dimensiune-3, -1, -1):
         x = dimensiune - pas - 1
         sum = 0
-        sum += f[i]*rezultat[x]
-        sum += e[i]*rezultat[x-1]
-        sum += d[i]*rezultat[x-2]
+        sum += f[i]*solution[x]
+        sum += e[i]*solution[x-1]
+        sol = (rezultat[i] - sum)/d[i]
         pas += 1
-        solution.append(sum)
+        solution[i] = sol
     return solution
 
 
@@ -222,6 +239,7 @@ def main_bonus():
     citire_bonus()
     zero_sub_dig()
     solutie = rezolvare_sistem()
+    print("Solutie bonus")
     print(solutie)
 
 
