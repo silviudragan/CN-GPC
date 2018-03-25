@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <float.h>
 
-// #include "glut.h"
-#include <GL/freeglut.h>
+#include "glut.h"
+//#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -19,18 +19,18 @@ int nivel = 0;
 class C2coord
 {
 public:
-  C2coord() 
+  C2coord()
   {
     m.x = m.y = 0;
   }
 
-  C2coord(double x, double y) 
+  C2coord(double x, double y)
   {
     m.x = x;
     m.y = y;
   }
 
-  C2coord(const C2coord &p) 
+  C2coord(const C2coord &p)
   {
     m.x = p.m.x;
     m.y = p.m.y;
@@ -51,7 +51,7 @@ public:
 protected:
   struct SDate
   {
-    double x,y;
+    double x, y;
   } m;
 };
 
@@ -85,7 +85,7 @@ public:
   void marcheaza()
   {
     glBegin(GL_POINTS);
-      glVertex2d(m.x, m.y);
+    glVertex2d(m.x, m.y);
     glEnd();
   }
 
@@ -139,14 +139,14 @@ public:
     normalizare();
   }
 
-  void deseneaza(CPunct p, double lungime) 
+  void deseneaza(CPunct p, double lungime)
   {
     double x, y;
     p.getxy(x, y);
     glColor3f(1.0, 0.1, 0.1);
     glBegin(GL_LINE_STRIP);
-      glVertex2d(x, y);
-      glVertex2d(x + m.x * lungime, y + m.y * lungime);
+    glVertex2d(x, y);
+    glVertex2d(x + m.x * lungime, y + m.y * lungime);
     glEnd();
   }
 
@@ -159,7 +159,7 @@ private:
   void normalizare()
   {
     double d = sqrt(C2coord::m.x * C2coord::m.x + C2coord::m.y * C2coord::m.y);
-    if (d != 0.0) 
+    if (d != 0.0)
     {
       C2coord::m.x = C2coord::m.x * 1.0 / d;
       C2coord::m.y = C2coord::m.y * 1.0 / d;
@@ -173,43 +173,43 @@ public:
   void segmentKoch(double lungime, int nivel, CPunct &p, CVector v)
   {
     CPunct p1;
-    if (nivel == 0) 
+    if (nivel == 0)
     {
       v.deseneaza(p, lungime);
     }
     else
     {
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+      //    v.print(stderr);
+      //    fprintf(stderr, "\n");
       segmentKoch(lungime / 3.0, nivel - 1, p, v);
       p1 = v.getDest(p, lungime / 3.0);
       v.rotatie(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+      //    v.print(stderr);
+      //    fprintf(stderr, "\n");
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
       p1 = v.getDest(p1, lungime / 3.0);
       v.rotatie(-120);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+      //    v.print(stderr);
+      //    fprintf(stderr, "\n");
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
       p1 = v.getDest(p1, lungime / 3.0);
       v.rotatie(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+      //    v.print(stderr);
+      //    fprintf(stderr, "\n");
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
     }
   }
 
   void afisare(double lungime, int nivel)
   {
-    CVector v1(sqrt(3.0)/2.0, 0.5);
+    CVector v1(sqrt(3.0) / 2.0, 0.5);
     CPunct p1(-1.0, 0.0);
 
     CVector v2(0.0, -1.0);
-    CPunct p2(0.5, sqrt(3.0)/2.0);
+    CPunct p2(0.5, sqrt(3.0) / 2.0);
 
-    CVector v3(-sqrt(3.0)/2.0, 0.5);
-    CPunct p3(0.5, -sqrt(3.0)/2.0);
+    CVector v3(-sqrt(3.0) / 2.0, 0.5);
+    CPunct p3(0.5, -sqrt(3.0) / 2.0);
 
     segmentKoch(lungime, nivel, p1, v1);
     segmentKoch(lungime, nivel, p2, v2);
@@ -223,7 +223,7 @@ public:
   void arboreBinar(double lungime, int nivel, CPunct &p, CVector v)
   {
     CPunct p1;
-    if (nivel == 0) 
+    if (nivel == 0)
     {
       v.deseneaza(p, lungime);
     }
@@ -252,15 +252,15 @@ public:
 class CArborePerron
 {
 public:
-  void arborePerron(double lungime, 
-                    int nivel, 
-                    double factordiviziune, 
-                    CPunct p, 
-                    CVector v)
+  void arborePerron(double lungime,
+    int nivel,
+    double factordiviziune,
+    CPunct p,
+    CVector v)
   {
     assert(factordiviziune != 0);
     CPunct p1, p2;
-    if (nivel == 0) 
+    if (nivel == 0)
     {
     }
     else
@@ -317,7 +317,7 @@ class CCurbaHilbert
 public:
   void curbaHilbert(double lungime, int nivel, CPunct &p, CVector &v, int d)
   {
-    if (nivel == 0) 
+    if (nivel == 0)
     {
     }
     else
@@ -339,7 +339,7 @@ public:
       v.rotatie(-d * 90);
       v.deseneaza(p, lungime);
       p = v.getDest(p, lungime);
-      
+
       curbaHilbert(lungime, nivel - 1, p, v, -d);
 
       v.rotatie(d * 90);
@@ -359,126 +359,128 @@ public:
 class Img1
 {
 public:
-	void Img1_recursion(double lungime, int nivel, CPunct &p, CVector v)
-	{
+  void Img1_recursion(double lungime, int nivel, CPunct &p, CVector v)
+  {
 
-		CPunct p1;
-		if (nivel == 0)
-		{
-			for (int i = 0; i<=3; i++) {
-				v.deseneaza(p, lungime);
-				p = v.getDest(p, lungime);
-				v.rotatie(90);
-			}
-		}
-		else
-		{
+    CPunct p1;
+    if (nivel == 0)
+    {
+      for (int i = 0; i <= 3; i++) {
+        v.deseneaza(p, lungime);
+        p = v.getDest(p, lungime);
+        v.rotatie(90);
+      }
+    }
+    else
+    {
 
-			// nuj csf aici......
-			float lungime1 = lungime / 3.0;
-			p1 = v.getDest(p, lungime1);
-			v.rotatie(90);
-			Img1_recursion(lungime1, nivel - 1, p1, v);
+      // nuj csf aici......
+      float lungime1 = lungime / 3.0;
+      p1 = v.getDest(p, lungime1);
+      v.rotatie(90);
+      Img1_recursion(lungime1, nivel - 1, p1, v);
 
-				
 
-			Img1_recursion(lungime, nivel - 1, p, v);
-		}
-	}
 
-	void afisare(double lungime, int nivel)//tb modificat
-	{
-		CVector v(0.0, -1.0);
-		CPunct p(-0.30, 0.30);
+      Img1_recursion(lungime, nivel - 1, p, v);
+    }
+  }
 
-		Img1_recursion(lungime, nivel, p, v);
-	}
+  void afisare(double lungime, int nivel)//tb modificat
+  {
+    CVector v(0.0, -1.0);
+    CPunct p(-0.30, 0.30);
+
+    Img1_recursion(lungime, nivel, p, v);
+  }
 };
 
 float PRECIZIE = 0.4;
 float PRECIZIE2 = 0.3;
 
-class Img2{
+class Img2 {
 public:
-	void Img2_recursion(double lungime, int nivel,  CPunct &p, CVector v)
-	{
-		CPunct p1, p2;
-		if (nivel == 0)
-		{
-		}
-		else
-		{
-			v.rotatie(-45);
-			v.deseneaza(p, lungime*PRECIZIE);
-			p1 = v.getDest(p, lungime*PRECIZIE);
-			Img2_recursion(lungime*PRECIZIE, nivel - 1, p1, v);
+  void Img2_recursion(double lungime, int nivel, CPunct &p, CVector v)
+  {
+    CPunct p1, p2;
+    if (nivel == 0)
+    {
+    }
+    else
+    {
+      v.rotatie(-45);
+      v.deseneaza(p, lungime*PRECIZIE);
+      p1 = v.getDest(p, lungime*PRECIZIE);
+      Img2_recursion(lungime*PRECIZIE, nivel - 1, p1, v);
 
-			v.rotatie(90);
-			v.deseneaza(p, lungime*PRECIZIE);
-			p1 = v.getDest(p, lungime*PRECIZIE);
+      v.rotatie(90);
+      v.deseneaza(p, lungime*PRECIZIE);
+      p1 = v.getDest(p, lungime*PRECIZIE);
 
-			p2 = p1;
-			v.rotatie(10);
-			v.deseneaza(p1, lungime*PRECIZIE);
-			p1 = v.getDest(p1, lungime*PRECIZIE);
-			Img2_recursion(lungime*PRECIZIE, nivel - 1, p1, v);
+      p2 = p1;
+      v.rotatie(10);
+      v.deseneaza(p1, lungime*PRECIZIE);
+      p1 = v.getDest(p1, lungime*PRECIZIE);
+      Img2_recursion(lungime*PRECIZIE, nivel - 1, p1, v);
 
-			v.rotatie(-55);
-			v.deseneaza(p2, lungime*PRECIZIE);
-			p2 = v.getDest(p2, lungime*PRECIZIE);
+      v.rotatie(-55);
+      v.deseneaza(p2, lungime*PRECIZIE);
+      p2 = v.getDest(p2, lungime*PRECIZIE);
 
-			p1 = p2;
-			v.rotatie(-90);
-			v.deseneaza(p2, lungime*PRECIZIE2);
-			p2 = v.getDest(p2, lungime*PRECIZIE2);
-			Img2_recursion(lungime*PRECIZIE2, nivel - 1, p2, v);
+      p1 = p2;
+      v.rotatie(-90);
+      v.deseneaza(p2, lungime*PRECIZIE2);
+      p2 = v.getDest(p2, lungime*PRECIZIE2);
+      Img2_recursion(lungime*PRECIZIE2, nivel - 1, p2, v);
 
-			v.rotatie(120);
-			v.deseneaza(p1, lungime*PRECIZIE2);
-			p1 = v.getDest(p1, lungime*PRECIZIE2);
-			Img2_recursion(lungime*PRECIZIE2, nivel - 1, p1, v);
-		}
-	}
+      v.rotatie(120);
+      v.deseneaza(p1, lungime*PRECIZIE2);
+      p1 = v.getDest(p1, lungime*PRECIZIE2);
+      Img2_recursion(lungime*PRECIZIE2, nivel - 1, p1, v);
+    }
+  }
 
-	void afisare(double lungime, int nivel)
-	{
-		CVector v(0.0, -1.0);
-		CPunct p(-0.2, 1);
+  void afisare(double lungime, int nivel)
+  {
+    CVector v(0.0, -1.0);
+    CPunct p(-0.2, 1);
 
-		v.deseneaza(p, lungime*0.15);
-		p = v.getDest(p, lungime*0.15);
-		Img2_recursion(lungime, nivel, p, v);
-	}
+    v.deseneaza(p, lungime*0.15);
+    p = v.getDest(p, lungime*0.15);
+    Img2_recursion(lungime, nivel, p, v);
+  }
 };
 
 class Img3
 {
 public:
 
-  void paint_model(double lungime, int nivel, CPunct &p, CVector &v, int angle) {
-    if ( nivel == 0 ) {
+  void paint_model(double lungime, int nivel, CPunct &p, CVector &v, int direction) {
+    if (nivel == 0) {
       v.deseneaza(p, lungime);
       p = v.getDest(p, lungime);
-    } else {
-        paint_model( lungime/2, nivel - 1, p, v,- angle);
-        v.rotatie(angle);
-        paint_model( lungime/2, nivel - 1, p, v, angle);
-        v.rotatie(angle);
-        paint_model( lungime/2, nivel - 1, p, v,- angle);
+    }
+    else {
+      paint_model(lungime / 2, nivel - 1, p, v, -direction);
+      v.rotatie(direction * 60);
+      paint_model(lungime / 2, nivel - 1, p, v, direction);
+      v.rotatie(direction * 60);
+      paint_model(lungime / 2, nivel - 1, p, v, -direction);
     }
   }
 
-  void Img3_recursion(double lungime, int nivel,  CPunct &p, CVector v)
+  void Img3_recursion(double lungime, int nivel, CPunct &p, CVector v)
   {
     CPunct p1, p2;
-    if ( nivel == 0) {
+    if (nivel == 0) {
 
-    } else if ( nivel % 2 == 0 ) {
-        paint_model( lungime, nivel, p, v, 60);
+    }
+    else if (nivel % 2 == 0) {
+      paint_model(lungime, nivel, p, v, -1);
     }
     else /* order is odd */ {
-        v.rotatie(60);
-        paint_model( lungime, nivel, p, v, -60);
+      //v.rotatie(60);
+      paint_model(lungime, nivel, p, v, 1);
     }
   }
 
@@ -498,7 +500,7 @@ void Display1() {
 
   char c[3];
   sprintf(c, "%2d", nivel);
-  glRasterPos2d(-0.98,-0.98);
+  glRasterPos2d(-0.98, -0.98);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
@@ -508,7 +510,7 @@ void Display1() {
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
-  glRasterPos2d(-1.0,0.9);
+  glRasterPos2d(-1.0, 0.9);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
@@ -534,7 +536,7 @@ void Display2() {
 
   char c[3];
   sprintf(c, "%2d", nivel);
-  glRasterPos2d(-0.98,-0.98);
+  glRasterPos2d(-0.98, -0.98);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
@@ -544,7 +546,7 @@ void Display2() {
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
-  glRasterPos2d(-1.0,0.9);
+  glRasterPos2d(-1.0, 0.9);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
@@ -567,7 +569,7 @@ void Display3() {
 
   char c[3];
   sprintf(c, "%2d", nivel);
-  glRasterPos2d(-0.98,-0.98);
+  glRasterPos2d(-0.98, -0.98);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
@@ -577,7 +579,7 @@ void Display3() {
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
-  glRasterPos2d(-1.0,-0.9);
+  glRasterPos2d(-1.0, -0.9);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
@@ -608,7 +610,7 @@ void Display4() {
 
   char c[3];
   sprintf(c, "%2d", nivel);
-  glRasterPos2d(-0.98,-0.98);
+  glRasterPos2d(-0.98, -0.98);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
@@ -618,7 +620,7 @@ void Display4() {
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
-  glRasterPos2d(-1.0,-0.9);
+  glRasterPos2d(-1.0, -0.9);
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
   glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
@@ -636,13 +638,13 @@ void Display4() {
   nivel++;
 }
 
-void Display5(){
+void Display5() {
   Img1 img1;
 
   // desenare patrat mare
   CVector v(0.0, -1.0);
   CPunct p(-0.9, 0.9);
-  img1.Img1_recursion(1.8 , 0, p, v);
+  img1.Img1_recursion(1.8, 0, p, v);
 
 
   img1.afisare(0.6, nivel);
@@ -664,22 +666,22 @@ void Display5(){
 
 void Display6()
 {
-	Img2 img2;
-	img2.afisare(1, nivel);
+  Img2 img2;
+  img2.afisare(1, nivel);
 
-	char c[3];
-	sprintf(c, "%2d", nivel);
-	glRasterPos2d(-0.98, -0.98);
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98, -0.98);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
-	nivel++;
+  nivel++;
 }
 
 void Display7()
@@ -705,77 +707,77 @@ void Display7()
 
 void Init(void) {
 
-   glClearColor(1.0,1.0,1.0,1.0);
+  glClearColor(1.0, 1.0, 1.0, 1.0);
 
-   glLineWidth(1);
+  glLineWidth(1);
 
-   glPointSize(3);
+  glPointSize(3);
 
-   glPolygonMode(GL_FRONT, GL_LINE);
+  glPolygonMode(GL_FRONT, GL_LINE);
 }
 
-void Display(void) 
+void Display(void)
 {
-  switch(prevKey) 
+  switch (prevKey)
   {
-    case '0':
-      glClear(GL_COLOR_BUFFER_BIT);
-      nivel = 0;
-      fprintf(stderr, "nivel = %d\n", nivel);
-      break;
-    case '1':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display1();
-      break;
-    case '2':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display2();
-      break;
-    case '3':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display3();
-      break;
-    case '4':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display4();
-      break;
-  	case '5':
-  		glClear(GL_COLOR_BUFFER_BIT);
-  		Display5();
-  		break;
-  	case '6':
-  		glClear(GL_COLOR_BUFFER_BIT);
-  		Display6();
-  		break;
-    case '7':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display7();
-      break;
-    default:
-      break;
+  case '0':
+    glClear(GL_COLOR_BUFFER_BIT);
+    nivel = 0;
+    fprintf(stderr, "nivel = %d\n", nivel);
+    break;
+  case '1':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display1();
+    break;
+  case '2':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display2();
+    break;
+  case '3':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display3();
+    break;
+  case '4':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display4();
+    break;
+  case '5':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display5();
+    break;
+  case '6':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display6();
+    break;
+  case '7':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display7();
+    break;
+  default:
+    break;
   }
 
   glFlush();
 }
 
-void Reshape(int w, int h) 
+void Reshape(int w, int h)
 {
-   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+  glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 }
 
-void KeyboardFunc(unsigned char key, int x, int y) 
+void KeyboardFunc(unsigned char key, int x, int y)
 {
-   prevKey = key;
-   if (key == 27) // escape
-      exit(0);
-   glutPostRedisplay();
+  prevKey = key;
+  if (key == 27) // escape
+    exit(0);
+  glutPostRedisplay();
 }
 
-void MouseFunc(int button, int state, int x, int y) 
+void MouseFunc(int button, int state, int x, int y)
 {
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
   glutInit(&argc, argv);
 
@@ -783,9 +785,9 @@ int main(int argc, char** argv)
 
   glutInitWindowPosition(100, 100);
 
-  glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
-  glutCreateWindow (argv[0]);
+  glutCreateWindow(argv[0]);
 
   Init();
 
