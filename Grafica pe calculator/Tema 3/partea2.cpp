@@ -6,7 +6,8 @@
 #include <assert.h>
 #include <float.h>
 
-#include "glut.h"
+// #include "glut.h"
+#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -397,8 +398,7 @@ public:
 float PRECIZIE = 0.4;
 float PRECIZIE2 = 0.3;
 
-class Img2
-{
+class Img2{
 public:
 	void Img2_recursion(double lungime, int nivel,  CPunct &p, CVector v)
 	{
@@ -451,33 +451,45 @@ public:
 	}
 };
 
-
-void Display5()
+class Img3
 {
-	Img1 img1;
+public:
 
-	// desenare patrat mare
-	CVector v(0.0, -1.0);
-	CPunct p(-0.9, 0.9);
-	img1.Img1_recursion(1.8 , 0, p, v);
+  void paint_model(double lungime, int nivel, CPunct &p, CVector &v, int angle) {
+    if ( nivel == 0 ) {
+      v.deseneaza(p, lungime);
+      p = v.getDest(p, lungime);
+    } else {
+        paint_model( lungime/2, nivel - 1, p, v,- angle);
+        v.rotatie(angle);
+        paint_model( lungime/2, nivel - 1, p, v, angle);
+        v.rotatie(angle);
+        paint_model( lungime/2, nivel - 1, p, v,- angle);
+    }
+  }
 
+  void Img3_recursion(double lungime, int nivel,  CPunct &p, CVector v)
+  {
+    CPunct p1, p2;
+    if ( nivel == 0) {
 
-	img1.afisare(0.6, nivel);
+    } else if ( nivel % 2 == 0 ) {
+        paint_model( lungime, nivel, p, v, 60);
+    }
+    else /* order is odd */ {
+        v.rotatie(60);
+        paint_model( lungime, nivel, p, v, -60);
+    }
+  }
 
-	char c[3];
-	sprintf(c, "%2d", nivel);
-	glRasterPos2d(-0.98, -0.98);
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  void afisare(double lungime, int nivel)
+  {
+    CVector v(0.0, -1.0);
+    CPunct p(-0.9, 0.9);
 
-	nivel++;
-}
+    Img3_recursion(lungime, nivel, p, v);
+  }
+};
 
 // afisare curba lui Koch "fulg de zapada"
 void Display1() {
@@ -624,6 +636,31 @@ void Display4() {
   nivel++;
 }
 
+void Display5(){
+  Img1 img1;
+
+  // desenare patrat mare
+  CVector v(0.0, -1.0);
+  CPunct p(-0.9, 0.9);
+  img1.Img1_recursion(1.8 , 0, p, v);
+
+
+  img1.afisare(0.6, nivel);
+
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98, -0.98);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+
+  nivel++;
+}
 
 void Display6()
 {
@@ -643,6 +680,26 @@ void Display6()
 	glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
 
 	nivel++;
+}
+
+void Display7()
+{
+  Img3 img3;
+  img3.afisare(1, nivel);
+
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98, -0.98);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+
+  nivel++;
 }
 
 
@@ -682,14 +739,18 @@ void Display(void)
       glClear(GL_COLOR_BUFFER_BIT);
       Display4();
       break;
-	case '5':
-		glClear(GL_COLOR_BUFFER_BIT);
-		Display5();
-		break;
-	case '6':
-		glClear(GL_COLOR_BUFFER_BIT);
-		Display6();
-		break;
+  	case '5':
+  		glClear(GL_COLOR_BUFFER_BIT);
+  		Display5();
+  		break;
+  	case '6':
+  		glClear(GL_COLOR_BUFFER_BIT);
+  		Display6();
+  		break;
+    case '7':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display7();
+      break;
     default:
       break;
   }
