@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <float.h>
 
-#include "glut.h"
-//#include <GL/freeglut.h>
+// #include "glut.h"
+#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -368,67 +368,91 @@ class Img1
 {
 public:
 
-	void paint_square(double lungime, CPunct &p, CVector v) {
-
-		for (int i = 0; i <= 3; i++) {
-			v.deseneaza(p, lungime);
-			p = v.getDest(p, lungime);
-			v.rotatie(90);
-		}
-	}
+  void paint_square(double lungime,CPunct &p, CVector v) {
+    double width = glutGet(GLUT_WINDOW_WIDTH);
+    double height = glutGet(GLUT_WINDOW_HEIGHT);
+    double length,max = width;
+    int i;
+    if (width < height)
+      max = height;
+    for ( i = 0; i<=3; i++) {
+      if (i % 2 == 0) 
+        length = lungime * (width/max);
+      else
+        length = lungime * (height/max); 
+      printf("%d %d\n",length,lungime );
+      v.deseneaza(p, length);
+      p = v.getDest(p, length);
+      v.rotatie(90);
+    }
+  }
 
 	void Img1_recursion(double lungime, int nivel, int nivel_actual, CPunct &p, CVector v)
 	{
 
-		double x, y;
+    double x,y;
+    double width = glutGet(GLUT_WINDOW_WIDTH);
+    double height = glutGet(GLUT_WINDOW_HEIGHT);
+    double length,max = width;
+    double l1,l2;
+    l2 = lungime * (width/max);
+    l1 = lungime * (height/max);
+
+
+    if (width < height)
+      max = height;
+
 		if (nivel_actual > nivel)
 		{
+      
+		}
+    else if (nivel_actual == 0) {
+      paint_square(lungime,p,v);
+      p.getxy(x,y);
 
-		}
-		else if (nivel_actual == 0) {
-			paint_square(lungime, p, v);
-			p.getxy(x, y);
-			CPunct p1(x + (lungime / 3), y - (lungime / 3));
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p1, v);
-		}
+      CPunct p1(x + (l1/3), y - (l2/3));
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p1, v);
+    }
 		else
 		{
-			if (nivel_actual == 1)
-			{
-				paint_square(lungime, p, v);
-			}
-			p.getxy(x, y);
-			CPunct p1(x - 2 * (lungime / 3), y + 2 * (lungime / 3));
-			paint_square(lungime / 3, p1, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p1, v);
 
-			CPunct p2(x + (lungime / 3), y + 2 * (lungime / 3));
-			paint_square(lungime / 3, p2, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p2, v);
+      if (nivel_actual == 1)
+      {
+        paint_square(lungime,p,v);
+      }
 
-			CPunct p3(x + 4 * (lungime / 3), y + 2 * (lungime / 3));
-			paint_square(lungime / 3, p3, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p3, v);
+		  p.getxy(x,y);
+      CPunct p1(x - 2 * (l1/3), y + 2 * (l2/3));
+      paint_square(lungime/3, p1, v);
+			Img1_recursion(lungime/3, nivel, nivel_actual + 1, p1, v);
 
-			CPunct p4(x + 4 * (lungime / 3), y - (lungime / 3));
-			paint_square(lungime / 3, p4, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p4, v);
+			CPunct p2(x + (l1/3), y + 2 * (l2/3));
+      paint_square(lungime/3, p2, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p2, v);
 
-			CPunct p5(x + 4 * (lungime / 3), y - 4 * (lungime / 3));
-			paint_square(lungime / 3, p5, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p5, v);
+      CPunct p3(x + 4 * (l1/3), y + 2 * (l2/3));
+      paint_square(lungime/3, p3, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p3, v);
 
-			CPunct p6(x + (lungime / 3), y - 4 * (lungime / 3));
-			paint_square(lungime / 3, p6, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p6, v);
+      CPunct p4(x + 4 * (l1/3), y - (l2/3));
+      paint_square(lungime/3, p4, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p4, v);
 
-			CPunct p7(x - 2 * (lungime / 3), y - 4 * (lungime / 3));
-			paint_square(lungime / 3, p7, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p7, v);
+      CPunct p5(x + 4* (l1/3), y - 4 * (l2/3));
+      paint_square(lungime/3, p5, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p5, v);
 
-			CPunct p8(x - 2 * (lungime / 3), y - (lungime / 3));
-			paint_square(lungime / 3, p8, v);
-			Img1_recursion(lungime / 3, nivel, nivel_actual + 1, p8, v);
+      CPunct p6(x + (l1/3), y - 4 * (l2/3));
+      paint_square(lungime/3, p6, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p6, v);
+
+      CPunct p7(x - 2 * (l1/3), y - 4 * (l2/3));
+      paint_square(lungime/3, p7, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p7, v);
+
+      CPunct p8(x - 2 * (l1/3), y - (l2/3));
+      paint_square(lungime/3, p8, v);
+      Img1_recursion(lungime/3, nivel, nivel_actual + 1, p8, v);	
 		}
 	}
 
@@ -437,9 +461,10 @@ public:
 		CVector v(0.0, -1.0);
 		CPunct p(-0.9, 0.90);
 
-		Img1_recursion(lungime, nivel, 0, p, v);
+		Img1_recursion(lungime, nivel,0, p, v);
 	}
 };
+
 
 float PRECIZIE = 0.4;
 float PRECIZIE2 = 0.3;
