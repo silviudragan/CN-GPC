@@ -1,6 +1,7 @@
 from math import fabs
 from pprint import pprint
 from operator import itemgetter
+import time
 
 global matrice_a
 global vector_a
@@ -100,7 +101,6 @@ def citire_date():
             length = 1
             # pprint(matrice_b)
 
-
 def adunare():
     aplusb = []
     for i in range(dimensiune_a):
@@ -154,74 +154,6 @@ def adunare():
                 pass
     return aplusb
 
-
-def inmultire():
-    aorib = []
-    for i in range(dimensiune_a):
-        line = []
-        aorib.append(line)
-    for i in range(dimensiune_a):
-        for j in range(dimensiune_b):
-            valoare = []
-            t = 0
-
-            s = 0
-            suma = 0
-            while s < dimensiune_a:
-                el_a = None
-                try:
-                    el_a = matrice_a[i][s][0]
-                    index_a = matrice_a[i][s][1]
-                    # print("a ", matrice_a[i][j])
-                except Exception:
-                    pass
-                if el_a is not None:
-                    el_b = matrice_b[s][0][1]
-                    k = 1
-                    while el_b < index_a and k < len(matrice_b[s]):
-                        el_b = matrice_b[s][k][1]
-                        k += 1
-                    if el_b == index_a:
-                        # print("b ", matrice_b[s][k])
-                        suma += el_a * matrice_b[s][k-1][0]
-                # print(s)
-                s += 1
-
-            if suma != 0:
-                # print(i, j)
-                valoare.append(suma)
-                valoare.append(j)
-                aorib[i].append(valoare)
-
-            # a = 1
-            # b = 0
-            # suma = 0
-            # while s < len(matrice_a[i]) and t < dimensiune_a:
-            #     while a != b and s < len(matrice_a[i]) and t < dimensiune_a:
-            #         print(i, j, s, t)
-            #         a = matrice_a[i][s][1]
-            #         b = matrice_b[t][j][1]
-            #         if a < b:
-            #             s += 1
-            #         elif a > b:
-            #             t += 1
-            #     try:
-            #         suma += matrice_a[i][s][0] * matrice_b[t][j][0]
-            #     except Exception:
-            #         pass
-            #     print(suma)
-            #     t += 1
-            #     s += 1
-            #
-            # if suma != 0:
-            #     valoare.append(suma)
-            #     valoare.append(j)
-            #     aorib[i].append(valoare)
-        print(i)
-        print(aorib[i])
-    return aorib
-
-
 def citire_rezultat():
     global aplusb
     global vector_rez
@@ -269,45 +201,106 @@ def citire_rezultat():
 
     return aplusb
 
+def element_complementar(linie,coloana):
+    global matrice_b
+    for i in matrice_b[linie]:
+        if i[1] == coloana:
+            return i
+    return "Nu exista"
 
 def sortare(rez):
     for i in range(dimensiune_rez):
         rez[i] = sorted(rez[i], key=itemgetter(1))
     return rez
 
+def inmultire_linie_coloana(linie, coloana):
+    global matrice_a
+    global matrice_b
+    rezultat = []
+    for i in matrice_a[linie]:
+        elm_b = element_complementar(i[1],coloana)
+        if elm_b != "Nu exista":
+            rezultat.append(i[0] * elm_b[0])
+    if len(rezultat) > 0:
+        return sum(rezultat)
+    else:
+        return 0
+
+def inmultire_alex():
+    global  matrice_a
+    global matrice_b
+    rezultat = []
+    for i in range(2018):
+        rezultat.append([])
+        for j in range(2018):
+            rez = inmultire_linie_coloana(i,j)
+            if rez != 0:
+                rezultat[i].append([rez,j])
+    return rezultat
+
+def citire_aorib():
+    global aorib
+    global vector_aorib
+    global dimensiune_aorib
+
+    aorib = []
+    vector_aorib = []
+    f = open('aorib.txt', 'r')
+    dimensiune_aorib = int(f.readline())
+    nimic = f.readline()
+
+    it = dimensiune_aorib
+    while it:
+        vector_aorib.append(float(f.readline()))
+        it -= 1
+        aorib.append([])
+
+    nimic = f.readline()
+    length = 3
+    while length != 1:
+        try:
+            line = f.readline()[:-1].split(', ')
+            int_line = [float(i) for i in line]
+            length = len(line)
+            valoare = []
+
+            if int_line[2] - int(int_line[2]) == 0:
+                int_line[2] = int(int_line[2])
+
+            if int_line[0] - int(int_line[0]) == 0:
+                int_line[0] = int(int_line[0])
+
+            valoare.append(int_line[0])
+            valoare.append(int_line[2])
+            aorib[int(int_line[1])].append(valoare)
+        except Exception:
+            length = 1
+
+def verificare_inmultire_egala(inmultit):
+    egale = True
+    linie = 0
+    for i in aorib:
+        for j in i:
+            try:
+                if fabs(j[0] - inmultit[linie][j[1]]) > PRECIZIE:
+                    egale = False
+                    break
+            except Exception:
+                pass
+        linie += 1
+    if egale:
+        print("Matricile pentru inmultire sunt egale")
+    else:
+        print("Matricile pentru inmultire nu sunt egale")
+
+global aorib
+global vector_aorib
+global dimensiune_aorib
+
 
 def main():
     citire_date()
-    # aplusb = adunare()
-    aorib = inmultire()
-    rez = citire_rezultat()
-    rez = sortare(rez)
-    aplusb = aorib
-    g = open('rez_aorib.txt', 'w')
-    # for i in range(dimensiune_a):
-    #     for j in range(dimensiune_a):
-    #         try:
-    #             g.write(str(aorib[i][j][0]) + ", " + str(i) + ", " + str(j) + "\n")
-    #         except Exception as error:
-    #             print(error)
-    index = 0
-    for linie in aorib:
-        for el in linie:
-            g.write(str(el[0]) + ", " + str(index) + ", " + str(el[1]) + "\n")
-
-    g.close()
-    # pprint(aorib)
-    # egale = True
-    # for i in range(dimensiune_rez):
-    #     for j in range(dimensiune_rez):
-    #         try:
-    #             if fabs(aplusb[i][j] - rez[i][j]) > PRECIZIE:
-    #                 egale = False
-    #                 break
-    #         except Exception:
-    #             pass
-    # if egale:
-    #     print("Matricile pentru suma sunt egale")
-    # else:
-    #     print("Matricile pentru suma nu sunt egale")
+    citire_aorib()
+    inmultit = inmultire_alex()
+    verificare_inmultire_egala(inmultit)
 main()
